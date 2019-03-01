@@ -3,5 +3,5 @@
 module.exports = {
 
   mongodb: 'mongodb://127.0.0.1:27017/vote-sys-dev',
-  file_system_domain: 'http://10.0.0.62:1235/',
+  self_domain: 'http://27.42.107.92:23333/',
 }

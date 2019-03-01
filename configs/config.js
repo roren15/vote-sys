@@ -17,8 +17,8 @@ const COMMON_CONFIG = {
   log_view_level: global.appEnv === enums.env.prod ? Logger.INFO() : Logger.DEBUG(),
 
   root_save_path: '/data/vote-sys/',
-  api_voice_access_token: '-"[{WHHwQW7n)_ghTKz]',
-  voice_split_path: '/data/vote-sys/split/',
+
+  mail_send_address: '152393288@qq.com',
 }
 
 const genConfig = function () {
@@ -27,7 +27,7 @@ const genConfig = function () {
     case enums.env.prod:
       return Object.assign(COMMON_CONFIG, require("./config.production.js"))
     case enums.env.test:
-      return Object.assign(COMMON_CONFIG, require("./config.test.js"))
+      return Object.assign(COMMON_CONFIG, require("./config.test.js"), require("./config.local.js"))
     case enums.env.dev:
       return Object.assign(COMMON_CONFIG, require("./config.development.js"), require("./config.local.js"))
     default:

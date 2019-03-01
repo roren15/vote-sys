@@ -6,7 +6,7 @@ const Enums = require('../../configs/enums')
 const util = require('util')
 const User = require('../../models/user')
 
-const whitelist = ['/login', '/', '/register',]
+const whitelist = ['/', '/login', '/register', '/validate_mail']
 
 class Interceptor {
 

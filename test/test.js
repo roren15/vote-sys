@@ -29,8 +29,10 @@ const commonQuery = {}
 const register_body = {
   mail: '13204611934@126.com',
   username: 'roren',
-  role: 'ADMIN'
+  role: 'USER'
 }
+let register_res = {}
+let token = ''
 
 describe(`start at: ${startTime}`, function () {
 
@@ -49,7 +51,23 @@ describe(`start at: ${startTime}`, function () {
           .expect(200)
           .end(function (err, res) {
             res.body.code.should.equal(200)
+            res.body.data.should.not.be.empty()
+            register_res = res.body.data
+            done()
+          })
+    })
+
+    it(`test system validate-mail`, done => {
+      agent
+          .get('/validate_mail')
+          .set("Content-Type", "application/json")
+          .query(register_res)
+          .expect(200)
+          .end(function (err, res) {
+            res.body.code.should.equal(200)
+            res.body.data.should.not.be.empty()
             res.body.data.should.have.key('token')
+            token = res.body.data.token
             done()
           })
     })

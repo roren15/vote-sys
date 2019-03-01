@@ -8,7 +8,7 @@
     "test": "NODE_ENV=TEST node index.js",
     "prod": "apidoc -i routes/ -o public/docs && NODE_ENV=PRODUCTION node index.js",
     "apidoc": "apidoc -i routes/ -o public/docs",
-    "mocha": "./node_modules/mocha/bin/mocha --exit"
+    "mocha": "mocha --exit"
   },
   "apidoc": {
     "name": "Vote-Sys API - Documentation",

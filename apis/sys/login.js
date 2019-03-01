@@ -10,7 +10,6 @@ const Enums = require('../../configs/enums')
 const util = require('util')
 const uuid = require('node-uuid')
 
-
 module.exports = async function (req, res) {
 
   let response = new Response()
