@@ -1,0 +1,14 @@
+{
+  "name": "vote-sys",
+  "version": "0.0.1",
+  "description": "for vote-system test",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "vote"
+  ],
+  "author": "roren15 <13204611934@126.com> (https://www.npmjs.com/~roren)",
+  "license": "ISC"
+}
