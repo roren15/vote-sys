@@ -4,7 +4,43 @@
   "description": "for vote-system test",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "NODE_ENV=DEVELOPMENT node index.js",
+    "test": "NODE_ENV=TEST node index.js",
+    "prod": "apidoc -i routes/ -o public/docs && NODE_ENV=PRODUCTION node index.js",
+    "apidoc": "apidoc -i routes/ -o public/docs",
+    "mocha": "./node_modules/mocha/bin/mocha"
+  },
+  "apidoc": {
+    "name": "Vote-Sys API - Documentation",
+    "version": "0.0.1",
+    "description": "Restful api for vote system",
+    "title": "Vote-Sys API",
+    "template": {
+      "forcelanguage": "en"
+    },
+    "header": {
+      "title": "Vote-Sys API"
+    }
+  },
+  "dependencies": {
+    "apidoc": "^0.17.7",
+    "body-parser": "^1.18.3",
+    "circular-json": "^0.5.9",
+    "compression": "^1.7.3",
+    "consign": "^0.1.6",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "express-fileupload": "^1.1.1-alpha.1",
+    "fs-extra": "^7.0.1",
+    "helmet": "^3.15.0",
+    "js-standard-logger": "^1.0.24",
+    "lodash": "^4.17.11",
+    "mocha": "^5.2.0",
+    "mongoose": "^5.3.7",
+    "morgan": "^1.9.1",
+    "node-uuid": "^1.4.8",
+    "request": "^2.88.0",
+    "supertest": "^3.4.1"
   },
   "keywords": [
     "vote"
