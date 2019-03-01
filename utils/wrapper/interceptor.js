@@ -31,9 +31,9 @@ class Interceptor {
     let headers = this._req.headers
     logger.exec('headers -> ' + util.inspect(headers))
 
-    let userId = headers[Enums.constant.AUTH_USER_ID]
-    let role = headers[Enums.constant.AUTH_USER_ROLE]
-    let token = headers[Enums.constant.AUTH_USER_TOKEN]
+    let userId = headers[Enums.auth.AUTH_USER_ID]
+    let role = headers[Enums.auth.AUTH_USER_ROLE]
+    let token = headers[Enums.auth.AUTH_USER_TOKEN]
 
     if (!userId || !role || !token) {
       return false

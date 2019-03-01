@@ -27,6 +27,6 @@ cd ${TARGET_FILE}
 #修改配置文件，换端口
 sed -i "4s/\([0-9]\+\)/$(( ${TARGET_PORT} - 1 ))/" ${TARGET_FILE}/${CONFIG_POSITION}
 sed -i "5s/\([0-9]\+\)/${TARGET_PORT}/" ${TARGET_FILE}/${CONFIG_POSITION}
-sed -i "6s/\(:[0-9]\+\)/:21098/" ${TARGET_FILE}/${CONFIG_POSITION}
+
 #启动dev
 npm run start

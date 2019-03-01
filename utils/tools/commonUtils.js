@@ -271,21 +271,21 @@ module.exports = {
       logger.exec(`getHttpFile with options -> ${util.inspect(options)}`)
       const enums = require('../../configs/enums')
       const http_request = fetch_media_file_url.indexOf('https') !== -1 ? https : http
-      const resType = res_options && res_options['type'] ? res_options['type'] : enums.responseType.buffer
-      const resCode = res_options && res_options['code'] ? res_options['code'] : enums.responseCode.default
+      const resType = res_options && res_options['type'] ? res_options['type'] : enums.response_type.buffer
+      const resCode = res_options && res_options['code'] ? res_options['code'] : enums.response_code.default
 
       try {
         let res
         let res_data
         http_request.get(fetch_media_file_url, options, function (response) {
           switch (resType) {
-            case enums.responseType.json:
+            case enums.response_type.json:
               res = ''
               response.on('data', (chunk) => {
                 res += chunk
               })
               break
-            case enums.responseType.buffer:
+            case enums.response_type.buffer:
             default:
               res = []
               response.on('data', (chunk) => {
@@ -299,13 +299,13 @@ module.exports = {
             }
             const name = that.fetchNameFromUrl(fetch_media_file_url)
             switch (resType) {
-              case enums.responseType.json:
+              case enums.response_type.json:
                 res_data = JSON.parse(res)
                 if (res_data[resCode] !== enums.code.success.default) {
                   return reject(await logger.exec(`err response code: ${res_data[resCode]} from url: ${fetch_media_file_url}`, Logger.ERROR()))
                 }
                 break
-              case enums.responseType.buffer:
+              case enums.response_type.buffer:
               default:
                 res_data = Buffer.concat(res)
                 break
@@ -339,80 +339,9 @@ module.exports = {
     }
   },
 
-  /**
-   * split voice from path/url
-   * @param origin_file_path: absolute path or http url
-   * @param split_path
-   * @param start_time
-   * @param end_time
-   * @param file_name
-   * @returns {Promise<String|Error>}
-   */
-  async splitVoice(origin_file_path, split_path, start_time, end_time, file_name) {
+  validateEmail(email) {
 
-    const script = require('../tools/script')
-    this.ensurePathExists(split_path)
-    if (!this.checkArgsNotNull(origin_file_path, split_path, start_time, end_time, file_name)) {
-      return Promise.reject(await logger.exec(`err params`, Logger.ERROR()))
-    }
-    const command = `cd ${split_path} && ffmpeg -i ${origin_file_path} -acodec copy -ss ${start_time} -to ${end_time} ${file_name}`
-
-    try {
-      return await script.execScript(command)
-    } catch (err) {
-      return Promise.reject(await logger.exec(`splitVoice failed: ${err.message}`, Logger.ERROR(), err))
-    }
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    return email && re.test(String(email).toLowerCase())
   },
-
-  /**
-   * intersect two array on axis, each obj in array must be formatted like "(0,1)" sorted in order
-   * @param discontinuous_array: discontinuous array
-   * @param continuous_array: continuous array, which includes discontinuous array actually
-   */
-  intersectAxis(discontinuous_array, continuous_array) {
-
-    if (!(this.checkArgsNotNull(discontinuous_array, continuous_array) && discontinuous_array.length > 0 && continuous_array.length > 0)) {
-      return
-    }
-    let res = []
-    let continuous_array_obj_split, continuous_array_obj_start, continuous_array_obj_end, discontinuous_array_obj_split, discontinuous_array_obj_start, discontinuous_array_obj_end, last_save_array_obj_start
-
-    try {
-      discontinuous_array.forEach(discontinuous_array_obj => {
-        discontinuous_array_obj_split = discontinuous_array_obj.split(',')
-        discontinuous_array_obj_start = parseFloat(discontinuous_array_obj_split[0])
-        discontinuous_array_obj_end = parseFloat(discontinuous_array_obj_split[1])
-
-        for (let continuous_array_obj of continuous_array) {
-          continuous_array_obj_split = continuous_array_obj.split(',')
-          continuous_array_obj_start = parseFloat(continuous_array_obj_split[0])
-          continuous_array_obj_end = parseFloat(continuous_array_obj_split[1])
-          last_save_array_obj_start = res.length > 0 && (res[res.length - 1].split(','))[0]
-          if (continuous_array_obj_start > discontinuous_array_obj_end) {
-            break
-          } else if (continuous_array_obj_start <= discontinuous_array_obj_start && continuous_array_obj_end >= discontinuous_array_obj_end) {
-            if (!last_save_array_obj_start || discontinuous_array_obj_start > last_save_array_obj_start) {
-              res.push(`${discontinuous_array_obj_start},${discontinuous_array_obj_end}`)
-            }
-          } else if (continuous_array_obj_start >= discontinuous_array_obj_start && continuous_array_obj_end <= discontinuous_array_obj_end) {
-            if (!last_save_array_obj_start || continuous_array_obj_start > last_save_array_obj_start) {
-              res.push(`${continuous_array_obj_start},${continuous_array_obj_end}`)
-            }
-          } else if (continuous_array_obj_start >= discontinuous_array_obj_start && continuous_array_obj_end >= discontinuous_array_obj_end && continuous_array_obj_start <= discontinuous_array_obj_end) {
-            if (!last_save_array_obj_start || continuous_array_obj_start > last_save_array_obj_start) {
-              res.push(`${continuous_array_obj_start},${discontinuous_array_obj_end}`)
-            }
-          } else if (continuous_array_obj_start <= discontinuous_array_obj_start && continuous_array_obj_end <= discontinuous_array_obj_end && continuous_array_obj_end >= discontinuous_array_obj_start) {
-            if (!last_save_array_obj_start || discontinuous_array_obj_start > last_save_array_obj_start) {
-              res.push(`${discontinuous_array_obj_start},${continuous_array_obj_end}`)
-            }
-          }
-        }
-      })
-    } catch (err) {
-      logger.exec(`intersectAxis err`, Logger.ERROR(), err)
-      return
-    }
-    return res
-  }
 }

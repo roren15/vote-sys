@@ -1,6 +1,6 @@
 {
   "name": "vote-sys",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "for vote-system test",
   "main": "index.js",
   "scripts": {
@@ -8,11 +8,11 @@
     "test": "NODE_ENV=TEST node index.js",
     "prod": "apidoc -i routes/ -o public/docs && NODE_ENV=PRODUCTION node index.js",
     "apidoc": "apidoc -i routes/ -o public/docs",
-    "mocha": "./node_modules/mocha/bin/mocha"
+    "mocha": "./node_modules/mocha/bin/mocha --exit"
   },
   "apidoc": {
     "name": "Vote-Sys API - Documentation",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "description": "Restful api for vote system",
     "title": "Vote-Sys API",
     "template": {
@@ -40,6 +40,8 @@
     "morgan": "^1.9.1",
     "node-uuid": "^1.4.8",
     "request": "^2.88.0",
+    "sendmail": "^1.4.1",
+    "should": "^13.2.3",
     "supertest": "^3.4.1"
   },
   "keywords": [

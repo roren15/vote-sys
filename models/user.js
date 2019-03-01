@@ -11,21 +11,17 @@ const dbHelper = require('../utils/helper/dbHelper')
  * 用户信息
  */
 const the_schema = new mongoose.Schema({
-      // 用户名
-      username: {
+      // 邮箱
+      mail: {
         type: String, required: true, unique: true, index: true
       },
-      // 密码
-      password: {
-        type: String, required: true, default: ''
+      // 用户名
+      username: {
+        type: String, required: false
       },
       // 角色（USER | ADMIN）
       role: {
         type: String, required: true, default: 'USER',
-      },
-      // 邮箱
-      mail: {
-        type: String, required: true, default: '',
       },
       // 邮箱是否合格
       mail_valid: {
@@ -34,10 +30,6 @@ const the_schema = new mongoose.Schema({
       // 邮箱验证码
       mail_valid_code: {
         type: String, required: false, default: '',
-      },
-      // 头像地址
-      portrait: {
-        type: String, required: false, default: ''
       },
       // 登录Token
       token: {

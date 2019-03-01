@@ -12,26 +12,30 @@ const Enums = {
     error: {
       default: 500,
       params: 40000,
-      snore_collect: 40001,
-      file: 40002,
-      without_files: 40003,
-      db: 40004,
+      db: 40001,
+      apis_handle: 40002,
+      email_invalid: 40003,
+      email_used: 40004,
     },
   },
-  constant: {
+  auth: {
     AUTH_USER_ID: 'auth-user-id',
     AUTH_USER_ROLE: 'auth-user-role',
     AUTH_USER_TOKEN: 'auth-user-token',
   },
-  responseType: {
+  user_role: {
+    user: 'USER',
+    admin: 'ADMIN',
+  },
+  response_type: {
     json: 'Json',
     buffer: 'Buffer',
   },
-  requestMethod: {
+  request_method: {
     get: 'GET',
     post: 'POST',
   },
-  responseCode: {
+  response_code: {
     api_voice: 'code',
     default: 'statusCode',
   },
