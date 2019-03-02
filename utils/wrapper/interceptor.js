@@ -7,14 +7,22 @@ const util = require('util')
 const User = require('../../models/user')
 
 /*
-  white list for auth
+  white map for auth with paths and method
  */
-const AuthWhitelist = ['/', '/login', '/register', '/validate_mail']
-const AuthWhiteMap=new Map([
-  '/'
+const AuthWhiteMap = new Map([
+  ['/', [Enums.request_method.get, Enums.request_method.post]],
+  ['/login', [Enums.request_method.post]],
+  ['/register', [Enums.request_method.post]],
+  ['/validate_mail', [Enums.request_method.get]],
 ])
 
-const AdminRoleList = ['/candidate']
+/*
+  paths with method required for admin role
+ */
+const AdminRoleMap = ([
+  ['/candidate', [Enums.request_method.post, Enums.request_method.put, Enums.request_method.delete]],
+  ['/vote', [Enums.request_method.post, Enums.request_method.put, Enums.request_method.delete]],
+])
 
 class Interceptor {
 
@@ -29,12 +37,13 @@ class Interceptor {
    * @returns {boolean}
    * @private
    */
-  _isInList(path_list) {
+  _isInMap(map) {
 
     const split = this._req.url.split('?')
     const mainPath = split.length > 0 ? split[0] : split
+    const passMethod = map.get(mainPath)
 
-    return path_list.indexOf(mainPath) !== -1
+    return passMethod.indexOf(this._req.method) !== -1
   }
 
   /**
@@ -44,7 +53,8 @@ class Interceptor {
   async authFilter() {
 
     try {
-      if (this._isInList(AuthWhitelist)) {
+      if (this._isInMap(AuthWhiteMap)) {
+        logger.exec(`in white map`, Logger.DEBUG())
         return Promise.resolve()
       }
 
@@ -64,7 +74,7 @@ class Interceptor {
       if (user.role !== role && user.token !== token) {
         return Promise.reject(`err role or token`)
       }
-      if (this._isInList(AdminRoleList) && user.role !== Enums.user_role.admin) {
+      if (this._isInMap(AdminRoleMap) && user.role !== Enums.user_role.admin) {
         return Promise.reject(`required for admin role`)
       }
 
@@ -75,7 +85,6 @@ class Interceptor {
 
     return Promise.resolve()
   }
-
 
 }
 
