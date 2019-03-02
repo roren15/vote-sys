@@ -6,7 +6,12 @@ const Enums = require('../../configs/enums')
 const util = require('util')
 const User = require('../../models/user')
 
-const whitelist = ['/', '/login', '/register', '/validate_mail']
+/*
+  white list for auth
+ */
+const AuthWhitelist = ['/', '/login', '/register', '/validate_mail']
+
+const AdminRoleList = ['/candidate/create']
 
 class Interceptor {
 
@@ -16,41 +21,59 @@ class Interceptor {
     this._res = res
   }
 
-  _isInWhitelist() {
+  /**
+   * check if in white list
+   * @returns {boolean}
+   * @private
+   */
+  _isInList(List) {
 
     const split = this._req.url.split('?')
     const mainPath = split.length > 0 ? split[0] : split
 
-    return whitelist.indexOf(mainPath) !== -1
+    return List.indexOf(mainPath) !== -1
   }
 
-  async _authCheck() {
+  /**
+   * basic auth check for request
+   * @returns {Promise<*>}
+   */
+  async authFilter() {
 
-    if (this._isInWhitelist()) return true
+    try {
+      if (this._isInList(AuthWhitelist)) {
+        return Promise.resolve()
+      }
 
-    let headers = this._req.headers
-    logger.exec('headers -> ' + util.inspect(headers))
+      const headers = this._req.headers
+      const userId = headers[Enums.auth.AUTH_USER_ID]
+      const role = headers[Enums.auth.AUTH_USER_ROLE]
+      const token = headers[Enums.auth.AUTH_USER_TOKEN]
 
-    let userId = headers[Enums.auth.AUTH_USER_ID]
-    let role = headers[Enums.auth.AUTH_USER_ROLE]
-    let token = headers[Enums.auth.AUTH_USER_TOKEN]
+      if (!userId || !role || !token) {
+        return Promise.reject(`err header params`)
+      }
+      const userList = await User.doFind({_id: userId})
+      if (!(userList && userList.length > 0)) {
+        return Promise.reject(`cannot find user`)
+      }
+      const user = userList[0]
+      if (user.role !== role && user.token !== token) {
+        return Promise.reject(`err role or token`)
+      }
+      if (this._isInList(AdminRoleList) && user.role !== Enums.user_role.admin) {
+        return Promise.reject(`required for admin role`)
+      }
 
-    if (!userId || !role || !token) {
-      return false
+    } catch (err) {
+      logger.exec(`authFilter err`, Logger.ERROR(), err)
+      return Promise.reject(err.message)
     }
 
-    let userList = await User.doFind({_id: userId})
-    if (!userList || userList.length === 0) {
-      return false
-    }
-
-    let user = userList[0]
-    if (!user) return false
-
-    if (user.role !== role && user.token !== token) return false
-
-    return true
+    return Promise.resolve()
   }
+
+
 }
 
 module.exports = Interceptor

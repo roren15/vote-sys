@@ -14,9 +14,10 @@ const Enums = {
       params: 40000,
       db: 40001,
       apis_handle: 40002,
-      email_invalid: 40003,
-      email_used: 40004,
-      email_validate_code_invalid: 40005,
+      auth: 40003,
+      email_invalid: 40101,
+      email_used: 40102,
+      email_validate_code_invalid: 40103,
     },
   },
   auth: {

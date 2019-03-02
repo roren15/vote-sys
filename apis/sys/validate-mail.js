@@ -34,6 +34,8 @@ module.exports = async function (req, res) {
           token: token
         })
         res_data['token'] = token
+        res_data['userId'] = user._id
+        res_data['role'] = user.role
       } else {
         return res.formatResponse('', enums.code.error.email_validate_code_invalid, 'please input valid email validate code')
       }

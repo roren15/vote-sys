@@ -14,7 +14,6 @@ const consign = require('consign')
 const app = express()
 const startTime = new Date().toISOString()
 
-// consign is used to load modules automatically through the specified order.
 const commonConsign = consign({verbose: true})
     .include('configs/config.js')
     .then('libs/db.js')
@@ -23,7 +22,6 @@ const commonConsign = consign({verbose: true})
     .then('routes')
 commonConsign.into(app)
 
-// const agent = request.agent(basicUrl)
 const agent = request(app)
 const commonQuery = {}
 const register_body = {
@@ -32,7 +30,7 @@ const register_body = {
   role: 'USER'
 }
 let register_res = {}
-let token = ''
+let auth = {}
 
 describe(`start at: ${startTime}`, function () {
 
@@ -67,7 +65,11 @@ describe(`start at: ${startTime}`, function () {
             res.body.code.should.equal(200)
             res.body.data.should.not.be.empty()
             res.body.data.should.have.key('token')
-            token = res.body.data.token
+            res.body.data.should.have.key('userId')
+            res.body.data.should.have.key('role')
+            auth['auth-user-token'] = res.body.data.token
+            auth['auth-user-id'] = res.body.data.userId
+            auth['auth-user-role'] = res.body.data.role
             done()
           })
     })

@@ -1,7 +1,7 @@
 # Vote-System
 
 ## prepare
-require for NodeJS and NPM environment
+require for NodeJS and NPM environment, based on mongoDB
 
 ## install
 ```bash

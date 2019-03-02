@@ -13,7 +13,7 @@ const bodyParser = require('body-parser')
 const Response = require('../utils/wrapper/response')
 const Interceptor = require('../utils/wrapper/interceptor')
 const commonUtils = require('../utils/tools/commonUtils')
-const Enums = require('../configs/enums');
+const Enums = require('../configs/enums')
 
 //format Response
 express.response.formatResponse = function (data, code, message) {
@@ -34,7 +34,7 @@ express.response.formatSend = function (body) {
 //middleware
 module.exports = app => {
 
-  app.use(morgan(`:method :url :status :res[content-length] :response-time ms :remote-addr`, {
+  app.use(morgan(`:method :url :req[header] :status :res[content-length] :response-time ms :remote-addr`, {
     stream: {
       write: (message) => {
         logger.exec(Logger.stringify(message))
@@ -48,17 +48,25 @@ module.exports = app => {
   app.use(bodyParser.json()) // for parsing application/json
   app.use(fileUpload())
   app.use(async (req, res, next) => {
-    const interceptor = new Interceptor(app, req, res);
-    if (!await interceptor._authCheck()) {
-      res.json({
-        code: Enums.code.error.params,
-        message: "登录失效"
-      });
-      return;
+    /*
+      intercept request
+     */
+    const interceptor = new Interceptor(app, req, res)
+    try {
+      await interceptor.authFilter()
+    } catch (err) {
+      logger.exec(`auth failed`, Logger.WARN(), err)
+      return res.json({
+        code: Enums.code.error.auth,
+        message: "auth failed"
+      })
     }
     next()
   })
   app.use(function (req, res, next) {
+    /*
+      intercept response
+     */
     res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
     next()
