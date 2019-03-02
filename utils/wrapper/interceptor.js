@@ -10,8 +10,11 @@ const User = require('../../models/user')
   white list for auth
  */
 const AuthWhitelist = ['/', '/login', '/register', '/validate_mail']
+const AuthWhiteMap=new Map([
+  '/'
+])
 
-const AdminRoleList = ['/candidate/create']
+const AdminRoleList = ['/candidate']
 
 class Interceptor {
 
@@ -26,12 +29,12 @@ class Interceptor {
    * @returns {boolean}
    * @private
    */
-  _isInList(List) {
+  _isInList(path_list) {
 
     const split = this._req.url.split('?')
     const mainPath = split.length > 0 ? split[0] : split
 
-    return List.indexOf(mainPath) !== -1
+    return path_list.indexOf(mainPath) !== -1
   }
 
   /**

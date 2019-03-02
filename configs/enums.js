@@ -36,6 +36,8 @@ const Enums = {
   request_method: {
     get: 'GET',
     post: 'POST',
+    put: 'PUT',
+    delete: 'DELETE',
   },
   response_code: {
     api_voice: 'code',

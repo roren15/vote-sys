@@ -4,7 +4,7 @@ module.exports = app => {
 
   const api = require('../apis/index')
 
-  app.route('/login').post(api.sys_login);
+  app.route('/login').post(api.sys_login)
 
   /**
    * @api {post} /register register
@@ -30,7 +30,7 @@ module.exports = app => {
    *    message: ""
    *  }
    */
-  app.route('/register').post(api.sys_register);
+  app.route('/register').post(api.sys_register)
 
   /**
    * @api {get} /validate_mail validate mail
@@ -55,5 +55,5 @@ module.exports = app => {
    *    message: ""
    *  }
    */
-  app.route('/validate_mail').get(api.sys_validate_mail);
+  app.route('/validate_mail').get(api.sys_validate_mail)
 }

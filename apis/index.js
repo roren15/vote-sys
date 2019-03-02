@@ -3,4 +3,5 @@
 exports.sys_login = require('./sys/login')
 exports.sys_register = require('./sys/register')
 exports.sys_validate_mail = require('./sys/validate-mail')
-exports.candidate_create = require('./candidate/create')
+exports.candidate_handler = require('./candidate/handler')
+exports.vote_handler = require('./vote/handler')

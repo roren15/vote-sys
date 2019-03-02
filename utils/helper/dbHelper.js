@@ -11,7 +11,7 @@ module.exports = {
 
   filterBasics(filter) {
 
-    return Object.assign(filter, {isDelete: false})
+    return !filter['isDelete'] && Object.assign(filter, {isDelete: false})
   },
 
   filterCreatedTime(filter) {
