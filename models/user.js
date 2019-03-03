@@ -19,6 +19,10 @@ const the_schema = new mongoose.Schema({
       username: {
         type: String, required: false
       },
+      // 密码
+      password: {
+        type: String, required: true, default: ''
+      },
       // 角色（USER | ADMIN）
       role: {
         type: String, required: true, default: 'USER',

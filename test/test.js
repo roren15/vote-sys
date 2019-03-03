@@ -27,12 +27,22 @@ const commonQuery = {}
 const register_body = {
   mail: '13204611934@126.com',
   username: 'roren',
-  role: 'USER'
+  role: 'USER',
+  password: '123456'
 }
 const register_admin_body = {
   mail: '152393288@qq.com',
   username: 'admin',
-  role: 'ADMIN'
+  role: 'ADMIN',
+  password: 'admin'
+}
+const user_login_body = {
+  mail: '13204611934@126.com',
+  password: '123456'
+}
+const admin_login_body = {
+  mail: '152393288@qq.com',
+  password: 'admin'
 }
 let user_register_res = {}
 let admin_register_res = {}
@@ -101,6 +111,22 @@ describe(`start at: ${startTime}`, function () {
           .get('/validate_mail')
           .set("Content-Type", "application/json")
           .query(user_register_res)
+          .expect(200)
+          .end(function (err, res) {
+            res.body.code.should.equal(200)
+            res.body.data.should.not.be.empty()
+            res.body.data.should.have.key('token')
+            res.body.data.should.have.key('userId')
+            res.body.data.should.have.key('role')
+            done()
+          })
+    })
+
+    it(`test system login`, done => {
+      agent
+          .post('/login')
+          .set("Content-Type", "application/json")
+          .send(user_login_body)
           .expect(200)
           .end(function (err, res) {
             res.body.code.should.equal(200)

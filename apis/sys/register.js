@@ -19,7 +19,7 @@ module.exports = async function (req, res) {
   const req_body = req.body
   let res_data = {}
 
-  if (!commonUtils.checkArgsNotNull(req_body.mail)) {
+  if (!commonUtils.checkArgsNotNull(req_body.mail, req_body.password)) {
     return res.formatResponse('', enums.code.error.params, 'error params')
   }
 
@@ -32,6 +32,7 @@ module.exports = async function (req, res) {
       mail: req_body.mail,
       role: req_body.role || enums.user_role.user,
       username: req_body.username || '',
+      password: commonUtils.getMd5(req_body.password),
       mail_valid_code: mail_valid_code,
       ip: commonUtils.getIpFromExpressReq(req),
       isDelete: false

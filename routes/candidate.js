@@ -18,9 +18,7 @@ module.exports = app => {
    * @apiSuccessExample {json} Success
    *  {
    *    code: 200,
-   *    data: {
-   *
-   *    },
+   *    data: {"id":"5c7b8a6e51ffbd582ccfc183"},
    *    message: ""
    *  }
    * @apiErrorExample {json} Error-Response:
@@ -103,9 +101,7 @@ module.exports = app => {
    * @apiSuccessExample {json} Success
    *  {
    *    code: 200,
-   *    data: {
-   *
-   *    },
+   *    data: {"name":["C_re_create"]},
    *    message: ""
    *  }
    * @apiErrorExample {json} Error-Response:

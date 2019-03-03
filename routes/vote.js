@@ -5,6 +5,32 @@ module.exports = app => {
   const api = require('../apis/index')
 
   /**
+   * @api {post} /vote user vote for candidates
+   * @apiGroup Vote
+   * @apiVersion 0.1.0
+   *
+   * @apiParam (header) {String} auth-user-id user id
+   * @apiParam (header) {String} auth-user-role user role
+   * @apiParam (header) {String} auth-user-token user token
+   *
+   * @apiParam (body) {String} name vote name
+   *
+   * @apiSuccessExample {json} Success
+   *  {
+   *    code: 200,
+   *    data: {"id":"5c7b8a6e51ffbd582ccfc185"},
+   *    message: ""
+   *  }
+   * @apiErrorExample {json} Error-Response:
+   *  {
+   *    code: 500,
+   *    data: {},
+   *    message: ""
+   *  }
+   */
+  app.route('/vote/user').post(api.user_vote)
+
+  /**
    * @api {post} /vote vote create
    * @apiGroup Vote
    * @apiVersion 0.1.0
@@ -103,9 +129,7 @@ module.exports = app => {
    * @apiSuccessExample {json} Success
    *  {
    *    code: 200,
-   *    data: {
-   *
-   *    },
+   *    data: {"name":["V_re_create"]},
    *    message: ""
    *  }
    * @apiErrorExample {json} Error-Response:

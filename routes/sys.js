@@ -4,6 +4,27 @@ module.exports = app => {
 
   const api = require('../apis/index')
 
+  /**
+   * @api {post} /login login
+   * @apiGroup System
+   * @apiVersion 0.1.0
+   *
+   * @apiParam (body) {String} mail mail address
+   * @apiParam (body) {String} password password
+   *
+   * @apiSuccessExample {json} Success
+   *  {
+   *    code: 200,
+   *    data: {"token":"e63847a0-3d8a-11e9-b828-c936b3731f27","userId":"5c7b8a6e51ffbd582ccfc181","role":"USER"},
+   *    message: ""
+   *  }
+   * @apiErrorExample {json} Error-Response:
+   *  {
+   *    code: 500,
+   *    data: {},
+   *    message: ""
+   *  }
+   */
   app.route('/login').post(api.sys_login)
 
   /**
@@ -18,9 +39,7 @@ module.exports = app => {
    * @apiSuccessExample {json} Success
    *  {
    *    code: 200,
-   *    data: {
-   *
-   *    },
+   *    data: {"mail":"152393288@qq.com","validate_code":"e6349e20-3d8a-11e9-b828-c936b3731f27"},
    *    message: ""
    *  }
    * @apiErrorExample {json} Error-Response:
@@ -39,13 +58,12 @@ module.exports = app => {
    *
    * @apiParam (query) {String} [validate_code] validate code
    * @apiParam (query) {String} mail mail address
+   * @apiParam (query) {String} password password
    *
    * @apiSuccessExample {json} Success
    *  {
    *    code: 200,
-   *    data: {
-   *
-   *    },
+   *    data: {"token":"e63847a0-3d8a-11e9-b828-c936b3731f27","userId":"5c7b8a6e51ffbd582ccfc181","role":"USER"},
    *    message: ""
    *  }
    * @apiErrorExample {json} Error-Response:
