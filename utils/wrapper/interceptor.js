@@ -67,6 +67,7 @@ class Interceptor {
       if (!userId || !role || !token) {
         return Promise.reject(`err header params`)
       }
+      // todo: add cache for user authorization
       const userList = await User.doFind({_id: userId})
       if (!(userList && userList.length > 0)) {
         return Promise.reject(`cannot find user`)

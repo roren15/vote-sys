@@ -22,6 +22,7 @@ module.exports = async function (req, res) {
   }
 
   try {
+    // todo: support for rule
     switch (req_method) {
       case enums.request_method.get:
         const votes_find = await Vote.doFind(filter)
@@ -47,7 +48,7 @@ module.exports = async function (req, res) {
         const update = {
           name: req_body.name
         }
-        await Vote.doUpdate(filter, update)
+        await Vote.doUpdate(filter, update, false)
         break
       case enums.request_method.delete:
         if (!commonUtils.checkArgsNotNull(req_body.id)) {
@@ -56,7 +57,7 @@ module.exports = async function (req, res) {
         const deleted = {
           isDelete: true
         }
-        await Vote.doUpdate(filter, deleted)
+        await Vote.doUpdate(filter, deleted, false)
         break
     }
   } catch (err) {

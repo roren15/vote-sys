@@ -15,6 +15,10 @@ const the_schema = new mongoose.Schema({
       name: {
         type: String, required: true, unique: true, index: true
       },
+      // 投票场
+      voteId: {type: mongoose.Schema.Types.ObjectId, ref: 'Vote', required: true},
+      // 投票数
+      voteNums: {type: Number, default: 1},
       // 删除与否
       isDelete: {
         type: Boolean, default: false

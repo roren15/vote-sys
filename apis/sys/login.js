@@ -20,6 +20,7 @@ module.exports = async function (req, res) {
     mail: req_body.mail,
     password: commonUtils.getMd5(req_body.password)
   }
+  let login_update = {}
 
   if (!commonUtils.checkArgsNotNull(req_body.mail, req_body.password)) {
     return res.formatResponse('', enums.code.error.params, 'error params')
@@ -32,6 +33,10 @@ module.exports = async function (req, res) {
       res_data['token'] = user.token
       res_data['userId'] = user._id
       res_data['role'] = user.role
+      login_update = {
+        lastLoginTime: Date.now(),
+      }
+      User.doUpdate(filter, login_update, false)
     } else {
       return res.formatResponse('', enums.code.error.login_failed, 'login fail')
     }

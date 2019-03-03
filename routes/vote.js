@@ -13,12 +13,15 @@ module.exports = app => {
    * @apiParam (header) {String} auth-user-role user role
    * @apiParam (header) {String} auth-user-token user token
    *
-   * @apiParam (body) {String} name vote name
+   * @apiParam (body) {String} vote_name vote name
+   * @apiParam (body) {Array} candidate_names candidate names
    *
    * @apiSuccessExample {json} Success
    *  {
    *    code: 200,
-   *    data: {"id":"5c7b8a6e51ffbd582ccfc185"},
+   *    data: {
+   *
+   *    },
    *    message: ""
    *  }
    * @apiErrorExample {json} Error-Response:
@@ -44,9 +47,7 @@ module.exports = app => {
    * @apiSuccessExample {json} Success
    *  {
    *    code: 200,
-   *    data: {
-   *
-   *    },
+   *    data: {"id":"5c7b8a6e51ffbd582ccfc185"},
    *    message: ""
    *  }
    * @apiErrorExample {json} Error-Response:

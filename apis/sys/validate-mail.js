@@ -32,7 +32,7 @@ module.exports = async function (req, res) {
         const token = uuid.v1()
         await User.doUpdate(user_filter, {
           token: token
-        })
+        }, false)
         res_data['token'] = token
         res_data['userId'] = user._id
         res_data['role'] = user.role
