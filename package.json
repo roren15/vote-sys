@@ -5,10 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "NODE_ENV=DEVELOPMENT node index.js",
-    "test": "NODE_ENV=TEST node index.js",
+    "test": "mocha --exit",
     "prod": "apidoc -i routes/ -o public/docs && NODE_ENV=PRODUCTION node index.js",
-    "apidoc": "apidoc -i routes/ -o public/docs",
-    "mocha": "mocha --exit"
+    "apidoc": "apidoc -i routes/ -o public/docs"
   },
   "apidoc": {
     "name": "Vote-Sys API - Documentation",
