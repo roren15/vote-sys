@@ -112,6 +112,7 @@ the_schema.statics.doUpdate = async function (filter_param, update, multi = true
 the_schema.statics.doFind = function (options) {
 
   commonUtils.cleanFields(options)
+  dbHelper.filterBasics(options)
 
   return new Promise((resolve, reject) => {
     Candidate_vote_users.find(options, async function (err, docs) {

@@ -1,7 +1,7 @@
 'use strict'
 
 const {config} = require('../../configs/config')
-const vote = require('../../models/vote')
+const Vote = require('../../models/vote')
 const Logger = require('js-standard-logger')
 const logger = new Logger(config.log_save_dir, config.log_save_file, 'vote-handler', config.log_view_level)
 const commonUtils = require('../../utils/tools/commonUtils')
@@ -23,6 +23,13 @@ module.exports = async function (req, res) {
 
   try {
     switch (req_method) {
+      case enums.request_method.get:
+        const votes_find = await Vote.doFind(filter)
+        res_data['name'] = []
+        votes_find.forEach(vote => {
+          res_data['name'].push(vote.name)
+        })
+        break
       case enums.request_method.post:
         if (!commonUtils.checkArgsNotNull(req_body.name)) {
           return res.formatResponse('', enums.code.error.params, 'error params')
@@ -30,7 +37,8 @@ module.exports = async function (req, res) {
         const options = {
           name: req_body.name
         }
-        await vote.doCreate(options)
+        const vote_create = await Vote.doCreate(options)
+        res_data['id'] = vote_create._id
         break
       case enums.request_method.put:
         if (!commonUtils.checkArgsNotNull(req_body.id)) {
@@ -39,16 +47,16 @@ module.exports = async function (req, res) {
         const update = {
           name: req_body.name
         }
-        await vote.doUpdate(filter, update)
+        await Vote.doUpdate(filter, update)
         break
       case enums.request_method.delete:
         if (!commonUtils.checkArgsNotNull(req_body.id)) {
           return res.formatResponse('', enums.code.error.params, 'error params')
         }
         const deleted = {
-          isDeleted: true
+          isDelete: true
         }
-        await vote.doUpdate(filter, deleted)
+        await Vote.doUpdate(filter, deleted)
         break
     }
   } catch (err) {

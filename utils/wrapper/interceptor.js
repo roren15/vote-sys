@@ -19,7 +19,7 @@ const AuthWhiteMap = new Map([
 /*
   paths with method required for admin role
  */
-const AdminRoleMap = ([
+const AdminRoleMap = new Map([
   ['/candidate', [Enums.request_method.post, Enums.request_method.put, Enums.request_method.delete]],
   ['/vote', [Enums.request_method.post, Enums.request_method.put, Enums.request_method.delete]],
 ])
@@ -39,11 +39,12 @@ class Interceptor {
    */
   _isInMap(map) {
 
+    if (!(map && map instanceof Map)) logger.exceptionThrows(`err params`)
     const split = this._req.url.split('?')
     const mainPath = split.length > 0 ? split[0] : split
     const passMethod = map.get(mainPath)
 
-    return passMethod.indexOf(this._req.method) !== -1
+    return passMethod && passMethod.indexOf(this._req.method) !== -1
   }
 
   /**

@@ -23,6 +23,13 @@ module.exports = async function (req, res) {
 
   try {
     switch (req_method) {
+      case enums.request_method.get:
+        const candidates_find = await Candidate.doFind(filter)
+        res_data['name'] = []
+        candidates_find.forEach(candidate => {
+          res_data['name'].push(candidate.name)
+        })
+        break
       case enums.request_method.post:
         if (!commonUtils.checkArgsNotNull(req_body.name)) {
           return res.formatResponse('', enums.code.error.params, 'error params')
@@ -30,7 +37,8 @@ module.exports = async function (req, res) {
         const options = {
           name: req_body.name
         }
-        await Candidate.doCreate(options)
+        const candidate_create = await Candidate.doCreate(options)
+        res_data['id'] = candidate_create._id
         break
       case enums.request_method.put:
         if (!commonUtils.checkArgsNotNull(req_body.id)) {
@@ -46,7 +54,7 @@ module.exports = async function (req, res) {
           return res.formatResponse('', enums.code.error.params, 'error params')
         }
         const deleted = {
-          isDeleted: true
+          isDelete: true
         }
         await Candidate.doUpdate(filter, deleted)
         break

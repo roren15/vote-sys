@@ -6,7 +6,7 @@ module.exports = app => {
 
   /**
    * @api {post} /vote vote create
-   * @apiGroup vote
+   * @apiGroup Vote
    * @apiVersion 0.1.0
    *
    * @apiParam (header) {String} auth-user-id user id
@@ -34,7 +34,7 @@ module.exports = app => {
 
   /**
    * @api {put} /vote vote update
-   * @apiGroup vote
+   * @apiGroup Vote
    * @apiVersion 0.1.0
    *
    * @apiParam (header) {String} auth-user-id user id
@@ -63,7 +63,7 @@ module.exports = app => {
 
   /**
    * @api {delete} /vote vote delete
-   * @apiGroup vote
+   * @apiGroup Vote
    * @apiVersion 0.1.0
    *
    * @apiParam (header) {String} auth-user-id user id
@@ -88,4 +88,32 @@ module.exports = app => {
    *  }
    */
   app.route('/vote').delete(api.vote_handler)
+
+  /**
+   * @api {get} /vote vote get
+   * @apiGroup Vote
+   * @apiVersion 0.1.0
+   *
+   * @apiParam (header) {String} auth-user-id user id
+   * @apiParam (header) {String} auth-user-role user role
+   * @apiParam (header) {String} auth-user-token user token
+   *
+   * @apiParam (body) {String} id vote id
+   *
+   * @apiSuccessExample {json} Success
+   *  {
+   *    code: 200,
+   *    data: {
+   *
+   *    },
+   *    message: ""
+   *  }
+   * @apiErrorExample {json} Error-Response:
+   *  {
+   *    code: 500,
+   *    data: {},
+   *    message: ""
+   *  }
+   */
+  app.route('/vote').get(api.vote_handler)
 }

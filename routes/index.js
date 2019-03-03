@@ -4,7 +4,7 @@ module.exports = app => {
 
   /**
    * @api {get} / API Status
-   * @apiGroup Status
+   * @apiGroup A-Status
    * @apiVersion 0.1.0
    *
    * @apiParamExample {json} Request-Example:
