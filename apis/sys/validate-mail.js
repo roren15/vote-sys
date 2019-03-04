@@ -26,7 +26,7 @@ module.exports = async function (req, res) {
       mail: req_query.mail,
     }
     const userList = await User.doFind(user_filter)
-    if (userList && userList.length > 0) {
+    if (commonUtils.judgeNotNull(userList)) {
       const user = userList[0]
       if (user.mail_valid_code === req_query.validate_code) {
         const token = uuid.v1()

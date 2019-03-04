@@ -30,7 +30,7 @@ module.exports = async function (req, res) {
       voteId: req_body.vote_id,
     }
     const userList = await User.doFind(register_filter)
-    if (userList && userList.length > 0) {
+    if (commonUtils.judgeNotNull(userList)) {
       return res.formatResponse('', enums.code.error.email_used, 'email address has been used')
     } else {
       const mail_valid_code = projUtils.validate_mail(req_body.mail)

@@ -18,6 +18,7 @@ const Enums = {
       email_invalid: 40101,
       email_used: 40102,
       email_validate_code_invalid: 40103,
+      email_need_to_validate: 40104,
       login_failed: 40104,
       vote_invalid: 40201,
       candidate_invalid: 40202,

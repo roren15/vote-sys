@@ -9,6 +9,7 @@ const Response = require('../../utils/wrapper/response')
 const enums = require('../../configs/enums')
 const util = require('util')
 const uuid = require('node-uuid')
+const projUtils = require('../../utils/tools/projUtils')
 
 module.exports = async function (req, res) {
 
@@ -27,16 +28,19 @@ module.exports = async function (req, res) {
   }
 
   try {
-    //todo: check if mail valid
     const userList = await User.doFind(filter)
-    if (userList && userList.length > 0) {
+    if (commonUtils.judgeNotNull(userList)) {
       const user = userList[0]
-      res_data['token'] = user.token
-      res_data['userId'] = user._id
-      res_data['role'] = user.role
-      login_update = {
-        lastLoginTime: Date.now(),
+      if (user.mail_valid) {
+        res_data['token'] = user.token
+        res_data['userId'] = user._id
+        res_data['role'] = user.role
+      } else {
+        const mail_valid_code = projUtils.validate_mail(user.mail)
+        login_update['mail_valid_code'] = mail_valid_code
+        response.setCode(enums.code.error.email_need_to_validate)
       }
+      login_update['lastLoginTime'] = Date.now()
       User.doUpdate(filter, login_update, false)
     } else {
       return res.formatResponse('', enums.code.error.login_failed, 'login fail')

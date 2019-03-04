@@ -32,6 +32,7 @@ module.exports = async function (req, res) {
     /*
       find vote
      */
+    // todo: need to check vote's end time
     const votes_find = await Vote.doFind(vote_filter)
     if (!(votes_find && votes_find.length > 0)) {
       return res.formatResponse('', enums.code.error.vote_invalid, 'vote invalid')
