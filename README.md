@@ -6,8 +6,8 @@ require for NodeJS and NPM environment, based on mongoDB
 
 ## Install
 ```bash
-$ cd 项目路径n
-$ npm stall
+$ cd project-path
+$ npm install
 ```
 
 # Develop
@@ -15,7 +15,7 @@ $ npm stall
 $ npm run start
 ```
 
-# Test
+# Mocha Test
 ```bash
 $ npm run test
 ```
