@@ -27,6 +27,7 @@ module.exports = async function (req, res) {
   }
 
   try {
+    //todo: check if mail valid
     const userList = await User.doFind(filter)
     if (userList && userList.length > 0) {
       const user = userList[0]

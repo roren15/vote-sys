@@ -22,31 +22,41 @@ module.exports = async function (req, res) {
   }
 
   try {
-    // todo: support for rule
+    // todo: support for rule: 1. admin can update vote'time
     switch (req_method) {
       case enums.request_method.get:
         const votes_find = await Vote.doFind(filter)
-        res_data['name'] = []
+        res_data = []
         votes_find.forEach(vote => {
-          res_data['name'].push(vote.name)
+          res_data.push({
+            name: vote.name,
+            id: vote._id
+          })
         })
         break
       case enums.request_method.post:
-        if (!commonUtils.checkArgsNotNull(req_body.name)) {
+        if (!commonUtils.checkArgsNotNull(req_body.name, req_body.start, req_body.end)) {
           return res.formatResponse('', enums.code.error.params, 'error params')
         }
         const options = {
-          name: req_body.name
+          name: req_body.name,
+          start: req_body.start,
+          end: req_body.end,
         }
         const vote_create = await Vote.doCreate(options)
-        res_data['id'] = vote_create._id
+        res_data = {
+          name: vote_create.name,
+          id: vote_create._id
+        }
         break
       case enums.request_method.put:
         if (!commonUtils.checkArgsNotNull(req_body.id)) {
           return res.formatResponse('', enums.code.error.params, 'error params')
         }
         const update = {
-          name: req_body.name
+          name: req_body.name,
+          start: req_body.start,
+          end: req_body.end,
         }
         await Vote.doUpdate(filter, update, false)
         break

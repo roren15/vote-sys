@@ -41,6 +41,7 @@ module.exports = app => {
    *
    * @apiParam (body) {String} id candidate id
    * @apiParam (body) {String} [name] candidate name
+   * @apiParam (body) {String} [vote_id] vote id
    *
    * @apiSuccessExample {json} Success
    *  {
@@ -96,7 +97,8 @@ module.exports = app => {
    * @apiParam (header) {String} auth-user-role user role
    * @apiParam (header) {String} auth-user-token user token
    *
-   * @apiParam (body) {String} id candidate id
+   * @apiParam (query) {String} [id] candidate id
+   * @apiParam (query) {String} [vote_id] vote id
    *
    * @apiSuccessExample {json} Success
    *  {

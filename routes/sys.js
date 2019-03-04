@@ -35,6 +35,7 @@ module.exports = app => {
    * @apiParam (body) {String} [username] register name
    * @apiParam (body) {String} [role] default for "USER"
    * @apiParam (body) {String} mail mail address
+   * @apiParam (body) {String} [vote_id] vote id
    *
    * @apiSuccessExample {json} Success
    *  {

@@ -14,6 +14,7 @@ const AuthWhiteMap = new Map([
   ['/login', [Enums.request_method.post]],
   ['/register', [Enums.request_method.post]],
   ['/validate_mail', [Enums.request_method.get]],
+  ['/vote', [Enums.request_method.get]],
 ])
 
 /*

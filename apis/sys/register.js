@@ -1,16 +1,14 @@
 'use strict'
 
 const {config} = require('../../configs/config')
-const User = require('../../models/user')
 const Logger = require('js-standard-logger')
 const logger = new Logger(config.log_save_dir, config.log_save_file, 'login', config.log_view_level)
+const User = require('../../models/user')
 const commonUtils = require('../../utils/tools/commonUtils')
 const Response = require('../../utils/wrapper/response')
 const util = require('util')
 const enums = require('../../configs/enums')
-const uuid = require('node-uuid')
-const sendmail = require('sendmail')()
-const url = require('url')
+const projUtils = require('../../utils/tools/projUtils')
 
 module.exports = async function (req, res) {
 
@@ -27,34 +25,27 @@ module.exports = async function (req, res) {
     if (!commonUtils.validateEmail(req_body.mail)) {
       return res.formatResponse('', enums.code.error.email_invalid, 'please input valid email address')
     }
-    const mail_valid_code = uuid.v1()
-    let register_option = {
-      mail: req_body.mail,
-      role: req_body.role || enums.user_role.user,
-      username: req_body.username || '',
-      password: commonUtils.getMd5(req_body.password),
-      mail_valid_code: mail_valid_code,
-      ip: commonUtils.getIpFromExpressReq(req),
-      isDelete: false
-    }
     const register_filter = {
       mail: req_body.mail,
+      voteId: req_body.vote_id,
     }
     const userList = await User.doFind(register_filter)
     if (userList && userList.length > 0) {
       return res.formatResponse('', enums.code.error.email_used, 'email address has been used')
     } else {
+      const mail_valid_code = projUtils.validate_mail(req_body.mail)
+      let register_option = {
+        mail: req_body.mail,
+        voteId: req_body.vote_id,
+        role: req_body.role || enums.user_role.user,
+        username: req_body.username || '',
+        password: commonUtils.getMd5(req_body.password),
+        mail_valid_code: mail_valid_code,
+        ip: commonUtils.getIpFromExpressReq(req),
+        isDelete: false
+      }
       const register_user = await User.doCreate(register_option)
       logger.exec(`register with mail: ${req_body.mail}`)
-      const validate_mail_url = url.resolve((`${config.self_domain}validate_mail`), `?mail=${req_body.mail}`, `&validate_code=${mail_valid_code}`)
-      sendmail({
-        from: config.mail_send_address,
-        to: req_body.mail,
-        subject: `${validate_mail_url}`,
-        html: 'Mail of Activation',
-      }, function (err, reply) {
-
-      })
       res_data['mail'] = req_body.mail
       res_data['validate_code'] = mail_valid_code
     }

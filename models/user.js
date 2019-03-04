@@ -6,6 +6,7 @@ const logger = new Logger(config.log_save_dir, config.log_save_file, 'user', con
 const commonUtils = require('../utils/tools/commonUtils')
 const mongoose = require('mongoose')
 const dbHelper = require('../utils/helper/dbHelper')
+const enums = require('../configs/enums')
 
 /**
  * 用户信息
@@ -13,11 +14,11 @@ const dbHelper = require('../utils/helper/dbHelper')
 const the_schema = new mongoose.Schema({
       // 邮箱
       mail: {
-        type: String, required: true, unique: true, index: true
+        type: String, required: true,
       },
       // 用户名
       username: {
-        type: String, required: false
+        type: String, required: false, default: ''
       },
       // 密码
       password: {
@@ -25,9 +26,18 @@ const the_schema = new mongoose.Schema({
       },
       // 角色（USER | ADMIN）
       role: {
-        type: String, required: true, default: 'USER',
+        type: String, required: true, default: enums.user_role.user,
       },
+      // 投票场
+      voteId: {
+        type: mongoose.Schema.Types.ObjectId, ref: 'Vote', required: false
+      },
+      // 候选人
+      candidateIds: [{
+        type: mongoose.Schema.Types.ObjectId, ref: 'Candidate', required: false
+      }],
       // 邮箱是否合格
+      //todo: each request required to check mail's validation
       mail_valid: {
         type: Boolean, required: false, default: false,
       },
@@ -121,14 +131,16 @@ the_schema.statics.doUpdate = async function (filter_param, update, multi = true
   commonUtils.cleanFields(filter)
   commonUtils.cleanFields(update)
   dbHelper.filterBasics(filter)
+  //todo: check for _id field
 
   if (commonUtils.checkArgsNotNull(filter, update)) {
     return new Promise((resolve, reject) => {
       User.update(filter, update, {multi: multi}, async function (err, mongoRes) {
         if (err) {
+          //todo: how to catch if not use await
           return reject(await logger.exceptionThrows(`update throw err: ${err.message}`))
         }
-        logger.exec(`update successfully with filter: ${Logger.stringify(filter)}`, Logger.DEBUG())
+        logger.exec(`update  ${Logger.stringify(filter)} successfully for filter: ${Logger.stringify(filter)}`, Logger.DEBUG())
         return resolve(mongoRes)
       })
     })
@@ -149,10 +161,9 @@ the_schema.statics.doFind = function (options) {
       if (err) {
         return reject(await logger.exceptionThrows(`find throw err: ${err.message}`))
       }
-      if (!docs) {
-        reject(await logger.exec(`no found`, Logger.WARN()))
+      if (commonUtils.judgeNotNull(docs)) {
+        logger.exec(`find successfully`, Logger.DEBUG())
       }
-      logger.exec(`find successfully`, Logger.DEBUG())
       resolve(docs)
     })
   })

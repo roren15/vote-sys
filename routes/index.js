@@ -21,6 +21,8 @@ module.exports = app => {
    *
    *  }
    */
+
+  //todo: fix for apis res data
   app.get('/', (req, res) => {
     res.json({
       status: "success"

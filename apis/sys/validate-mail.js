@@ -31,6 +31,7 @@ module.exports = async function (req, res) {
       if (user.mail_valid_code === req_query.validate_code) {
         const token = uuid.v1()
         await User.doUpdate(user_filter, {
+          mail_valid: true,
           token: token
         }, false)
         res_data['token'] = token

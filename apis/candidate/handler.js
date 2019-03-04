@@ -17,18 +17,22 @@ module.exports = async function (req, res) {
   const req_query = req.query
   const req_body = req.body
   let res_data = {}
-  const filter = {
-    _id: req_body.id
+  let filter = {
+    _id: req_body.id || req_query.id,
+    voteId: req_body.vote_id || req_query.vote_id,
   }
 
   try {
-    // todo: support for rule
+    // todo: support for rule: 1. operate before vote begin 2. admin can get vote's candidate ranking
     switch (req_method) {
       case enums.request_method.get:
         const candidates_find = await Candidate.doFind(filter)
-        res_data['name'] = []
+        res_data = []
         candidates_find.forEach(candidate => {
-          res_data['name'].push(candidate.name)
+          res_data.push({
+            name: candidate.name,
+            id: candidate._id
+          })
         })
         break
       case enums.request_method.post:
@@ -36,10 +40,14 @@ module.exports = async function (req, res) {
           return res.formatResponse('', enums.code.error.params, 'error params')
         }
         const options = {
-          name: req_body.name
+          name: req_body.name,
+          voteId: req_body.vote_id
         }
         const candidate_create = await Candidate.doCreate(options)
-        res_data['id'] = candidate_create._id
+        res_data = {
+          name: candidate_create.name,
+          id: candidate_create._id
+        }
         break
       case enums.request_method.put:
         if (!commonUtils.checkArgsNotNull(req_body.id)) {

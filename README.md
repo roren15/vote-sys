@@ -1,30 +1,31 @@
 # Vote-System
+Vote system Api
 
-## prepare
+## Environment
 require for NodeJS and NPM environment, based on mongoDB
 
-## install
+## Install
 ```bash
 $ cd 项目路径n
 $ npm stall
 ```
 
-# develop
+# Develop
 ```bash
 $ npm run start
 ```
 
-# test
+# Test
 ```bash
 $ npm run test
 ```
 
-# deploy
+# Deploy
 ```bash
 $ npm run prod
 ```
 
-# post api-doc
+# Post api-doc
 ```bash
 $ npm run apidoc
 ```

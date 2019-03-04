@@ -17,11 +17,11 @@ const the_schema = new mongoose.Schema({
       },
       // 开始时间
       start: {
-        type: Number, required: true, default: 0
+        type: Date, required: true, default: 0
       },
       // 结束时间
       end: {
-        type: Number, required: true, default: 0
+        type: Date, required: true, default: 0
       },
       // 删除与否
       isDelete: {
@@ -104,7 +104,7 @@ the_schema.statics.doUpdate = async function (filter_param, update, multi = true
         if (err) {
           return reject(await logger.exceptionThrows(`update throw err: ${err.message}`))
         }
-        logger.exec(`update successfully with filter: ${Logger.stringify(filter)}`, Logger.DEBUG())
+        logger.exec(`update  ${Logger.stringify(filter)} successfully for filter: ${Logger.stringify(filter)}`, Logger.DEBUG())
         return resolve(mongoRes)
       })
     })
@@ -126,9 +126,8 @@ the_schema.statics.doFind = function (options) {
         return reject(await logger.exceptionThrows(`find throw err: ${err.message}`))
       }
       if (!docs) {
-        reject(await logger.exec(`no found`, Logger.WARN()))
+        logger.exec(`find successfully`, Logger.DEBUG())
       }
-      logger.exec(`find successfully`, Logger.DEBUG())
       resolve(docs)
     })
   })

@@ -13,12 +13,14 @@ const dbHelper = require('../utils/helper/dbHelper')
 const the_schema = new mongoose.Schema({
       // 姓名
       name: {
-        type: String, required: true, unique: true, index: true
+        type: String, required: true,
       },
       // 投票场
-      voteId: {type: mongoose.Schema.Types.ObjectId, ref: 'Vote', required: true},
-      // 投票数
-      voteNums: {type: Number, default: 1},
+      voteId: {type: mongoose.Schema.Types.ObjectId, ref: 'Vote', required: false},
+      // 投票用戶
+      userIds: [{
+        type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false
+      }],
       // 删除与否
       isDelete: {
         type: Boolean, default: false
@@ -100,7 +102,7 @@ the_schema.statics.doUpdate = async function (filter_param, update, multi = true
         if (err) {
           return reject(await logger.exceptionThrows(`update throw err: ${err.message}`))
         }
-        logger.exec(`update successfully with filter: ${Logger.stringify(filter)}`, Logger.DEBUG())
+        logger.exec(`update  ${Logger.stringify(filter)} successfully for filter: ${Logger.stringify(filter)}`, Logger.DEBUG())
         return resolve(mongoRes)
       })
     })
@@ -121,10 +123,9 @@ the_schema.statics.doFind = function (options) {
       if (err) {
         return reject(await logger.exceptionThrows(`find throw err: ${err.message}`))
       }
-      if (!docs) {
-        reject(await logger.exec(`no found`, Logger.WARN()))
+      if (commonUtils.judgeNotNull(docs)) {
+        logger.exec(`find successfully`, Logger.DEBUG())
       }
-      logger.exec(`find successfully`, Logger.DEBUG())
       resolve(docs)
     })
   })
