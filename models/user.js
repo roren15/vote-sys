@@ -103,7 +103,7 @@ the_schema.statics.doCreate = async function (options) {
   commonUtils.cleanFields(options)
 
   if (commonUtils.checkArgsNotNull(options)) {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       User.create(options)
           .then(res => {
             updateIp(res, options)
@@ -111,7 +111,8 @@ the_schema.statics.doCreate = async function (options) {
             return resolve(res)
           })
           .catch(async err => {
-            return reject(await logger.exceptionThrows(`save throw err: ${err.message}`))
+            logger.exec(`save throw err`, Logger.ERROR(), err)
+            return resolve()
           })
     })
   }
@@ -134,13 +135,14 @@ the_schema.statics.doUpdate = async function (filter_param, update, multi = true
   //todo: check for _id field
 
   if (commonUtils.checkArgsNotNull(filter, update)) {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       User.update(filter, update, {multi: multi}, async function (err, mongoRes) {
         if (err) {
           //todo: how to catch if not use await
-          return reject(await logger.exceptionThrows(`update throw err: ${err.message}`))
+          logger.exec(`update throw err`, Logger.ERROR(), err)
+          return resolve()
         }
-        logger.exec(`update  ${Logger.stringify(filter)} successfully for filter: ${Logger.stringify(filter)}`, Logger.DEBUG())
+        logger.exec(`update ${Logger.stringify(filter)} successfully for filter: ${Logger.stringify(filter)}`, Logger.DEBUG())
         return resolve(mongoRes)
       })
     })
@@ -156,15 +158,16 @@ the_schema.statics.doFind = function (options) {
   commonUtils.cleanFields(options)
   dbHelper.filterBasics(options)
 
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     User.find(options, async function (err, docs) {
       if (err) {
-        return reject(await logger.exceptionThrows(`find throw err: ${err.message}`))
+        logger.exec(`find throw err`, Logger.ERROR(), err)
+        return resolve()
       }
       if (commonUtils.judgeNotNull(docs)) {
         logger.exec(`find successfully`, Logger.DEBUG())
       }
-      resolve(docs)
+      return resolve(docs)
     })
   })
 }
