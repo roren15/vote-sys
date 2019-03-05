@@ -22,7 +22,7 @@ $ npm install
 $ npm run test
 ```
 
-# Docker Image Build
+# Docker Deploy
 ```bash
 $ cd project-path
 $ sh dockerbuild.sh
