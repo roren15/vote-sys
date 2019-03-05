@@ -2,7 +2,14 @@
 Vote system Api
 
 ## Environment
-require for NodeJS and NPM environment, based on mongoDB
+develop: require for NodeJS and NPM environment, based on mongoDB
+docker: require for docker and docker-compose
+
+# Docker Deploy
+```bash
+$ cd project-path
+$ docker-compose up -d
+```
 
 ## Install
 ```bash
@@ -10,19 +17,20 @@ $ cd project-path
 $ npm install
 ```
 
-# Develop
-```bash
-$ npm run start
-```
-
 # Mocha Test
 ```bash
 $ npm run test
 ```
 
-# Deploy
+# Docker Image Build
 ```bash
-$ npm run prod
+$ cd project-path
+$ sh dockerbuild.sh
+```
+
+# Develop
+```bash
+$ npm run start
 ```
 
 # Post api-doc

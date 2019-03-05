@@ -1,0 +1,34 @@
+.DS_Store
+node_modules/
+/dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.temp
+logs/
+public/docs
+
+# Editor directories and files
+*.idea
+*.iml
+*.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# automatically generated files
+.babelrc
+.editorconfig
+.eslintignore
+.eslintrc.js
+.postcssrc.js
+package-lock.json
+*.tgz
+*.wav
+
+# local file
+configs/config.local.*
+
+# data
+/data/

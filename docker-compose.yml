@@ -1,0 +1,19 @@
+version: '2'
+services:
+  roren_vote_sys:
+    image: roren/vote-system:v1
+    container_name: vote-system
+    restart: unless-stopped
+    ports:
+      - "23333:23333"
+      - "23334:23334"
+    volumes:
+      - "/data/logs/vote-sys:/data/logs/vote-sys"
+      - "/data/vote-sys:/data/vote-sys"
+    links:
+      - mongo
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - "27027:27017"

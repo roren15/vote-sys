@@ -40,6 +40,7 @@ module.exports = async function (req, res) {
     /*
       find and update both user and candidate
      */
+    // todo: vote rule: voting candidates required to half of candidates in that vote, at least 2, but most 5
     if (commonUtils.judgeNotNull(req_body.candidate_ids) && commonUtils.getType(req_body.candidate_ids) === 'array') {
       req_body.candidate_ids.forEach(async candidate_id => {
         // todo: not support for multi votes per user
