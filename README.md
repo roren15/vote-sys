@@ -1,9 +1,9 @@
 # Vote-System
-Vote system Api
+Vote system node Api, serviced for basic vote and its manage
 
 ## Environment
-develop: require for NodeJS and NPM environment, based on mongoDB
-docker: require for docker and docker-compose
+Develop: require for NodeJS and NPM environment, based on mongoDB ;
+Docker: require for docker and docker-compose
 
 # Docker Deploy
 ```bash
