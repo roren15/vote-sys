@@ -11,6 +11,7 @@ const Response = require('../../utils/wrapper/response')
 const enums = require('../../configs/enums')
 const util = require('util')
 const uuid = require('node-uuid')
+const dbHelper = require('../../utils/helper/dbHelper')
 
 module.exports = async function (req, res) {
 
@@ -20,30 +21,41 @@ module.exports = async function (req, res) {
   const req_body = req.body
   let res_data = {}
   const user_id = req.headers[enums.auth.AUTH_USER_ID]
-  const vote_filter = {
-    _id: req_body.vote_id
-  }
 
   if (!commonUtils.checkArgsNotNull(req_body.vote_id)) {
     return res.formatResponse('', enums.code.error.params, 'error params')
   }
 
   try {
+    let vote, user
+
     /*
       find vote
      */
-    // todo: need to check vote's end time
+    let vote_filter = {
+      _id: req_body.vote_id
+    }
+    // need to check vote's end time
+    dbHelper.filterTime(vote_filter, 'end', null, new Date())
     const votes_find = await Vote.doFind(vote_filter)
-    if (!(votes_find && votes_find.length > 0)) {
+    if (!(commonUtils.judgeNotNull(votes_find))) {
       return res.formatResponse('', enums.code.error.vote_invalid, 'vote invalid')
+    } else {
+      vote = votes_find[0]
     }
     /*
       find and update both user and candidate
      */
-    // todo: vote rule: voting candidates required to half of candidates in that vote, at least 2, but most 5
     if (commonUtils.judgeNotNull(req_body.candidate_ids) && commonUtils.getType(req_body.candidate_ids) === 'array') {
+      // vote rule: voting candidates required to half of candidates in that vote, at least 2, but most 5
+      const candidate_count = Candidate.getCount({
+        voteId: req_body.vote_id,
+      })
+      if (req_body.candidate_ids.length < 2 || req_body.candidate_ids.length > 5) {
+        return res.formatResponse('', enums.code.error.user_vote_candidates_num_err, 'vote invalid')
+      }
       req_body.candidate_ids.forEach(async candidate_id => {
-        // todo: not support for multi votes per user
+        // not support for multi votes per user
         const candidate_filter = {
           _id: candidate_id,
           voteId: req_body.vote_id,
@@ -53,7 +65,9 @@ module.exports = async function (req, res) {
           const candidate = candidates_find[0]
           if (!(commonUtils.judgeNotNull(candidate.userIds) && candidate.userIds.indexOf(user_id) !== -1)) {
             Candidate.doUpdate(candidate_filter, {
-              userIds: user_id
+              $push: {
+                userIds: user_id
+              }
             }, false)
           }
           /*
@@ -65,10 +79,12 @@ module.exports = async function (req, res) {
           }
           const users_find = await User.doFind(user_filter)
           if (commonUtils.judgeNotNull(users_find)) {
-            const user = users_find[0]
-            if (!(commonUtils.judgeNotNull(user.candidateIds) && user.candidateIds.indexOf(user_id) !== -1)) {
+            user = users_find[0]
+            if (!(commonUtils.judgeNotNull(user.candidateIds) && user.candidateIds.indexOf(candidate_id) !== -1)) {
               User.doUpdate(user_filter, {
-                candidateIds: candidate_id
+                $push: {
+                  candidateIds: candidate_id
+                }
               }, false)
             }
           }

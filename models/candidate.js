@@ -101,10 +101,10 @@ the_schema.statics.doUpdate = async function (filter_param, update, multi = true
     return new Promise(resolve => {
       Candidate.update(filter, update, {multi: multi}, async function (err, mongoRes) {
         if (err) {
-          logger.exec(`update throw err`,Logger.ERROR(),err)
+          logger.exec(`update throw err`, Logger.ERROR(), err)
           return resolve()
         }
-        logger.exec(`update ${Logger.stringify(filter)} successfully for filter: ${Logger.stringify(filter)}`, Logger.DEBUG())
+        logger.exec(`update ${Logger.stringify(update)} successfully for filter: ${Logger.stringify(filter)}`, Logger.DEBUG())
         return resolve(mongoRes)
       })
     })
@@ -130,6 +130,27 @@ the_schema.statics.doFind = function (options) {
         logger.exec(`find successfully`, Logger.DEBUG())
       }
       return resolve(docs)
+    })
+  })
+}
+
+/**
+ *  calculate the total number of records
+ */
+the_schema.statics.getCount = function (filter) {
+
+  commonUtils.cleanFields(filter)
+  dbHelper.filterBasics(filter)
+
+  return new Promise(resolve => {
+    Candidate.count(filter, function (err, res) {
+      if (err) {
+        logger.exec(`find throw err`, Logger.ERROR(), err)
+        return resolve()
+      } else {
+        logger.exec(`count successfully, res: ${res}`, Logger.DEBUG())
+        resolve(res)
+      }
     })
   })
 }

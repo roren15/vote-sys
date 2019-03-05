@@ -37,7 +37,7 @@ const the_schema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, ref: 'Candidate', required: false
       }],
       // 邮箱是否合格
-      //todo: each request required to check mail's validation
+      // each request required to check mail's validation
       mail_valid: {
         type: Boolean, required: false, default: false,
       },
@@ -142,7 +142,7 @@ the_schema.statics.doUpdate = async function (filter_param, update, multi = true
           logger.exec(`update throw err`, Logger.ERROR(), err)
           return resolve()
         }
-        logger.exec(`update ${Logger.stringify(filter)} successfully for filter: ${Logger.stringify(filter)}`, Logger.DEBUG())
+        logger.exec(`update ${Logger.stringify(update)} successfully for filter: ${Logger.stringify(filter)}`, Logger.DEBUG())
         return resolve(mongoRes)
       })
     })
@@ -168,6 +168,27 @@ the_schema.statics.doFind = function (options) {
         logger.exec(`find successfully`, Logger.DEBUG())
       }
       return resolve(docs)
+    })
+  })
+}
+
+/**
+ *  calculate the total number of records
+ */
+the_schema.statics.getCount = function (filter) {
+
+  commonUtils.cleanFields(filter)
+  dbHelper.filterBasics(filter)
+
+  return new Promise(resolve => {
+    User.count(wherestr, function (err, res) {
+      if (err) {
+        logger.exec(`count throw err`, Logger.ERROR(), err)
+        return resolve()
+      } else {
+        logger.exec(`count successfully, res: ${res}`, Logger.DEBUG())
+        resolve(res)
+      }
     })
   })
 }

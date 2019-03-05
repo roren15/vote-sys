@@ -22,7 +22,6 @@ module.exports = async function (req, res) {
   }
 
   try {
-    // todo: support for rule: 1. admin can update vote'time
     switch (req_method) {
       case enums.request_method.get:
         const votes_find = await Vote.doFind(filter)

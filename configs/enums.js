@@ -22,6 +22,8 @@ const Enums = {
       login_failed: 40104,
       vote_invalid: 40201,
       candidate_invalid: 40202,
+      candidate_cannot_be_operated: 40203,
+      user_vote_candidates_num_err: 40301,
     },
   },
   auth: {

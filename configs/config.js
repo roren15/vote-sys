@@ -27,7 +27,7 @@ const genConfig = function () {
     case enums.env.prod:
       return Object.assign(COMMON_CONFIG, require("./config.production.js"))
     case enums.env.test:
-      return Object.assign(COMMON_CONFIG, require("./config.test.js"), require("./config.local.js"))
+      return Object.assign(COMMON_CONFIG, require("./config.test.js"))
     case enums.env.dev:
       return Object.assign(COMMON_CONFIG, require("./config.development.js"), require("./config.local.js"))
     default:

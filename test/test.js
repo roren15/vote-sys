@@ -78,6 +78,10 @@ let user_update_body = {
   username: 'U_update',
 }
 let user_vote_body = {}
+user_vote_body['candidate_ids'] = []
+let admin_vote_body = {}
+admin_vote_body['candidate_ids'] = []
+let candidates_result_query = {}
 
 describe(`start at: ${startTime}`, function () {
 
@@ -187,6 +191,8 @@ describe(`start at: ${startTime}`, function () {
             candidate_create_body['vote_id'] = res.body.data.id
             candidate_re_create_body['vote_id'] = res.body.data.id
             user_vote_body['vote_id'] = res.body.data.id
+            admin_vote_body['vote_id'] = res.body.data.id
+            candidates_result_query['vote_id'] = res.body.data.id
             register_body['vote_id'] = res.body.data.id
             candidate_re_create_body['vote_id'] = res.body.data.id
             done()
@@ -320,7 +326,62 @@ describe(`start at: ${startTime}`, function () {
           .end(function (err, res) {
             res.body.code.should.equal(200)
             res.body.data.should.have.key('id')
-            user_vote_body['candidate_ids'] = []
+            user_vote_body['candidate_ids'].push(res.body.data.id)
+            admin_vote_body['candidate_ids'].push(res.body.data.id)
+            done()
+          })
+    })
+
+    it(`test candidate create A`, done => {
+      candidate_re_create_body['name'] = 'A'
+      agent
+          .post('/candidate')
+          .set("Content-Type", "application/json")
+          .set("auth-user-token", admin_auth['auth-user-token'])
+          .set("auth-user-id", admin_auth['auth-user-id'])
+          .set("auth-user-role", admin_auth['auth-user-role'])
+          .send(candidate_re_create_body)
+          .expect(200)
+          .end(function (err, res) {
+            res.body.code.should.equal(200)
+            res.body.data.should.have.key('id')
+            user_vote_body['candidate_ids'].push(res.body.data.id)
+            admin_vote_body['candidate_ids'].push(res.body.data.id)
+            done()
+          })
+    })
+
+    it(`test candidate create B`, done => {
+      candidate_re_create_body['name'] = 'B'
+      agent
+          .post('/candidate')
+          .set("Content-Type", "application/json")
+          .set("auth-user-token", admin_auth['auth-user-token'])
+          .set("auth-user-id", admin_auth['auth-user-id'])
+          .set("auth-user-role", admin_auth['auth-user-role'])
+          .send(candidate_re_create_body)
+          .expect(200)
+          .end(function (err, res) {
+            res.body.code.should.equal(200)
+            res.body.data.should.have.key('id')
+            user_vote_body['candidate_ids'].push(res.body.data.id)
+            done()
+          })
+    })
+
+    it(`test candidate create C`, done => {
+      candidate_re_create_body['name'] = 'C'
+      agent
+          .post('/candidate')
+          .set("Content-Type", "application/json")
+          .set("auth-user-token", admin_auth['auth-user-token'])
+          .set("auth-user-id", admin_auth['auth-user-id'])
+          .set("auth-user-role", admin_auth['auth-user-role'])
+          .send(candidate_re_create_body)
+          .expect(200)
+          .end(function (err, res) {
+            res.body.code.should.equal(200)
+            res.body.data.should.have.key('id')
             user_vote_body['candidate_ids'].push(res.body.data.id)
             done()
           })
@@ -339,6 +400,7 @@ describe(`start at: ${startTime}`, function () {
             done()
           })
     })
+
   })
 
   describe('test user api', function () {
@@ -372,5 +434,36 @@ describe(`start at: ${startTime}`, function () {
             done()
           })
     })
+
+    it(`test admin do vote`, done => {
+      agent
+          .post('/user/vote')
+          .set("Content-Type", "application/json")
+          .set("auth-user-token", admin_auth['auth-user-token'])
+          .set("auth-user-id", admin_auth['auth-user-id'])
+          .set("auth-user-role", admin_auth['auth-user-role'])
+          .send(admin_vote_body)
+          .expect(200)
+          .end(function (err, res) {
+            res.body.code.should.equal(200)
+            done()
+          })
+    })
+
+    it(`test candidate get result`, done => {
+      agent
+          .get('/candidate')
+          .set("Content-Type", "application/json")
+          .set("auth-user-token", user_auth['auth-user-token'])
+          .set("auth-user-id", user_auth['auth-user-id'])
+          .set("auth-user-role", user_auth['auth-user-role'])
+          .query(candidates_result_query)
+          .expect(200)
+          .end(function (err, res) {
+            res.body.code.should.equal(200)
+            done()
+          })
+    })
+
   })
 })

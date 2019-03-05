@@ -9,17 +9,33 @@ const enums = require('../../configs/enums')
 
 module.exports = {
 
-  filterBasics(filter) {
+  /**
+   * basic filter for isDelete
+   * @param filter
+   * @returns {boolean|*}
+   */
+  filterBasics(filter = {}) {
 
     return !commonUtils.judgeNotNull(filter['isDelete']) && Object.assign(filter, {isDelete: false})
   },
 
-  filterCreatedTime(filter) {
+  /**
+   * time filter
+   * @param filter
+   * @param filter_field
+   * @param start_time
+   * @param end_time
+   * @returns {*}
+   */
+  filterTime(filter, filter_field = 'createdAt', start_time, end_time) {
 
-    if (commonUtils.checkArgsNotNull(filter['startTime'], filter['endTime'])) {
-      filter['createdAt'] = {'$gte': filter['startTime'], '$lte': filter['endTime']}
-      delete filter['startTime']
-      delete filter['endTime']
+    if (commonUtils.checkArgsNotNull(filter, filter[filter_field])) {
+      if (start_time) {
+        filter[filter_field]['$gte'] = start_time
+      }
+      if (end_time) {
+        filter[filter_field]['$lte'] = end_time
+      }
     }
     return filter
   },
